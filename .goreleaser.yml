@@ -1,0 +1,83 @@
+builds:
+  - id: build
+    main: ./cmd/yaml-reader
+    binary: yaml-reader
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    env:
+      - CGO_ENABLED=0
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s
+      - -w
+      - -X github.com/gertd/yaml-reader/pkg/version.ver={{.Version}}
+      - -X github.com/gertd/yaml-reader/pkg/version.commit={{.ShortCommit}}
+      - -X github.com/gertd/yaml-reader/pkg/version.date={{.Date}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+archives:
+  - format: zip
+    files:
+      - LICENSE
+      - README.md
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+
+checksum:
+  name_template: "checksums.txt"
+
+snapshot:
+  name_template: "{{ .Tag }}"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+
+release:
+  github:
+    owner: gertd
+    name: yaml-reader
+
+  draft: false
+  name_template: "yaml-reader {{.Tag}}"
+
+brews:
+  - name: yaml-reader
+
+    tap:
+      owner: gertd
+      name: homebrew-tap
+
+    url_template: "https://github.com/gertd/yaml-redare/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+
+    commit_author:
+      name: Gert Drapers
+      email: gert@d5s.io
+
+    homepage: "https://github.com/gertd/yaml-reader/"
+
+    description: "yaml reader"
+
+    license: "MIT"
+
+    skip_upload: false
+
+    test: |
+      system "#{bin}/yaml-reader version"
+
+    install: |
+      bin.install "yaml-reader"

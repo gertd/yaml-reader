@@ -1,6 +1,6 @@
-FROM golang:1.19-alpine AS build
+ARG GO_VERSION
+FROM ghcr.io/aserto-dev/go-builder:$GO_VERSION AS build
 
-RUN apk add --no-cache bash build-base git tree curl
 WORKDIR /src
 
 # dowload debugger into Docker cacheable layer
@@ -14,7 +14,7 @@ COPY . .
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
     --mount=type=ssh \
-    go run mage.go deps build
+    mage build
         
 FROM alpine
 ARG VERSION

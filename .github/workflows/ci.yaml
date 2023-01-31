@@ -82,4 +82,6 @@ jobs:
         with:
           build-args: GO_VERSION=${{ env.GO_VERSION }}
           push: true
-          tags: gertd/yaml-reader:1
+          tags: gertd/yaml-reader:latest
+          secrets: |
+            GIT_AUTH_TOKEN=${{ secrets.DOCKER_PASSWORD }}

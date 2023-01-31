@@ -1,17 +1,15 @@
 name: ci
 
 on:
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
   push:
-    # Publish `main` as Docker `latest` image.
     branches:
-      - main
-    # Publish `v1.2.3` tags as releases.
+      - "**"
     tags:
-      - v*
-  # Run tests for all PRs
+      - "v*.*.*"
   pull_request:
+    branches:
+      - "main"
 
 env:
   VAULT_ADDR: https://vault.eng.aserto.com/
@@ -68,15 +66,13 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          # list of Docker images to use as base name for tags
           images: |
             ghcr.io/gertd/yaml-reader
-          # generate Docker tags based on the following events/attributes
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-            type=sha          
+            type=sha
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -84,12 +80,13 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       -
-        name: Login to GitHub Registry
+        name: Login to GHCR
+        if: github.event_name != 'pull_request'
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       -
         name: Build and push
         uses: docker/build-push-action@v4
@@ -99,5 +96,3 @@ jobs:
           platforms: linux/amd64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          secrets: |
-            GIT_AUTH_TOKEN=${{ secrets.DOCKER_PASSWORD }}

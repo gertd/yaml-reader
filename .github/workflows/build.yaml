@@ -21,10 +21,16 @@ jobs:
     uses: gertd/workflows/.github/workflows/go-build.yaml@main
     secrets: 
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
+  docker-build-step:
+    uses: gertd/workflows/.github/workflows/go-docker-build.yaml@main
+    needs: build-step
+    secrets: 
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release-step:
     if: github.event_name == 'push' && ( github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release-') || startsWith(github.ref, 'refs/heads/dev-') || startsWith(github.ref, 'refs/tags/v') )
+    needs: [build-step, docker-build-step]
     uses: gertd/workflows/.github/workflows/go-release.yaml@main
     secrets: 
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              

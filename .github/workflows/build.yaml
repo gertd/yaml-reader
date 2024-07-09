@@ -17,8 +17,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  build-step:
     uses: gertd/workflows/.github/workflows/go-build.yaml@main
-    with:
     secrets: 
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

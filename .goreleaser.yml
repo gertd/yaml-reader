@@ -1,7 +1,22 @@
+project_name: yaml-reader
+
+env:
+  # https://goreleaser.com/customization/env/
+  - REGISTRY=ghcr.io
+  - ORG=gertd
+  - REPO=yaml-reader
+  - DESCRIPTION="yaml file reader"
+  - LICENSE=Apache-2.0
+
+before:
+  # https://goreleaser.com/customization/hooks/
+  hooks:
+
 builds:
+  # https://goreleaser.com/customization/build/
   - id: build
     main: ./cmd/yaml-reader
-    binary: yaml-reader
+    binary: "{{ .ProjectName }}"
     goos:
       - darwin
       - linux
@@ -17,13 +32,16 @@ builds:
     ldflags:
       - -s
       - -w
-      - -X github.com/gertd/yaml-reader/pkg/version.ver={{.Version}}
-      - -X github.com/gertd/yaml-reader/pkg/version.commit={{.ShortCommit}}
-      - -X github.com/gertd/yaml-reader/pkg/version.date={{.Date}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.ver={{.Version}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.commit={{.ShortCommit}}
+      - -X github.com/{{ .Env.ORG }}/{{ .Env.REPO }}/pkg/version.date={{.Date}}
     mod_timestamp: "{{ .CommitTimestamp }}"
 
 archives:
+  # https://goreleaser.com/customization/archive/
   - format: zip
+    builds:
+    - build
     files:
       - LICENSE
       - README.md
@@ -35,12 +53,19 @@ archives:
       {{- else }}{{ .Arch }}{{ end }}
 
 checksum:
+  # https://goreleaser.com/customization/checksum/
   name_template: "checksums.txt"
 
 snapshot:
-  name_template: "{{ .Tag }}"
+  # https://goreleaser.com/customization/snapshots/
+  name_template: "{{ incpatch .Version }}-{{ .ShortCommit }}{{ if .IsGitDirty }}-dirty{{ end }}"
+
+source:
+  # https://goreleaser.com/customization/source/
+  enabled: false
 
 changelog:
+  # https://goreleaser.com/customization/changelog/
   sort: asc
   filters:
     exclude:
@@ -48,29 +73,39 @@ changelog:
       - "^test:"
 
 release:
+  # https://goreleaser.com/customization/release/
   github:
-    owner: gertd
-    name: yaml-reader
+    owner: "{{ .Env.ORG }}"
+    name: "{{ .Env.REPO }}"
 
   draft: false
-  name_template: "yaml-reader {{.Tag}}"
+  prerelease: "false"
+  name_template: "{{.ProjectName}} {{.Tag}}"
+
+blobs:
+  # https://goreleaser.com/customization/blob/
 
 brews:
-  - name: yaml-reader
+  # https://goreleaser.com/customization/homebrew/
+  -
+    name: yaml-reader-homebrew
 
-    tap:
-      owner: gertd
+    repository:
+      owner: "{{ .Env.ORG }}"
       name: homebrew-tap
+      token: "{{ .Env.ASERTO_TAP }}"
 
-    url_template: "https://github.com/gertd/yaml-redare/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+    url_template: "https://github.com/gertd/yaml-reader/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+
+    download_strategy: CurlDownloadStrategy
 
     commit_author:
       name: Gert Drapers
       email: gert@d5s.io
 
-    homepage: "https://github.com/gertd/yaml-reader/"
+    homepage: "https://github.com/gertd/yaml-reader"
 
-    description: "yaml reader"
+    description: "yaml file reader"
 
     license: "MIT"
 
@@ -78,6 +113,56 @@ brews:
 
     test: |
       system "#{bin}/yaml-reader version"
-
     install: |
       bin.install "yaml-reader"
+
+dockers:
+  # https://goreleaser.com/customization/docker/
+  - use: buildx
+    goos: linux
+    goarch: amd64
+    image_templates:
+      - &amd64-image "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Version }}-amd64"
+    skip_push: false
+    dockerfile: Dockerfile.goreleaser
+    build_flag_templates:
+      - "--platform=linux/amd64"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source=https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
+      - "--label=org.opencontainers.image.description={{ .Env.DESCRIPTION }}"
+      - "--label=org.opencontainers.image.licenses={{ .Env.LICENSE }}"
+    extra_files:
+      - gh-action-entrypoint.sh
+
+  - use: buildx
+    goos: linux
+    goarch: arm64
+    image_templates:
+      - &arm64-image "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Version }}-arm64"
+    skip_push: false
+    dockerfile: Dockerfile.goreleaser
+    build_flag_templates:
+      - "--platform=linux/arm64/v8"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source=https://github.com/{{ .Env.ORG }}/{{ .Env.REPO }}"
+      - "--label=org.opencontainers.image.description={{ .Env.DESCRIPTION }}"
+      - "--label=org.opencontainers.image.licenses={{ .Env.LICENSE }}"
+    extra_files:
+      - gh-action-entrypoint.sh
+
+docker_manifests:
+  # https://goreleaser.com/customization/docker_manifest/
+  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:latest"
+    image_templates: [*amd64-image, *arm64-image]
+  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}"
+    image_templates: [*amd64-image, *arm64-image]
+  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}.{{ .Minor }}"
+    image_templates: [*amd64-image, *arm64-image]
+  - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
+    image_templates: [*amd64-image, *arm64-image]

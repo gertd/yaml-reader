@@ -1,0 +1,10 @@
+FROM alpine
+
+RUN apk add --no-cache bash
+
+WORKDIR /app
+
+COPY yaml-reader* /app/
+COPY gh-action-entrypoint.sh /app/
+
+ENTRYPOINT ["./yaml-reader"]

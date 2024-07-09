@@ -115,7 +115,7 @@ func outputVariables(w *os.File, data map[string]interface{}) error {
 }
 
 func write(w *os.File, key, value string) error {
-	_, err := w.WriteString(fmt.Sprintf("%s=%s\n", key, strings.TrimSpace(value)))
+	_, err := fmt.Fprintf(w, "%s=%s\n", key, strings.TrimSpace(value))
 	return err
 }
 
@@ -129,7 +129,7 @@ func openGitHubOutput() (*os.File, error) {
 		return nil, os.ErrNotExist
 	}
 
-	return os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	return os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644)
 }
 
 func fileExist(filename string) bool {

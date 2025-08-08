@@ -6,7 +6,7 @@ env:
   - ORG=gertd
   - REPO=yaml-reader
   - DESCRIPTION="yaml file reader"
-  - LICENSE=Apache-2.0
+  - LICENSE=MIT
 
 before:
   # https://goreleaser.com/customization/hooks/
@@ -14,7 +14,7 @@ before:
 
 builds:
   # https://goreleaser.com/customization/build/
-  - id: build
+  - id: yaml-reader
     main: ./cmd/yaml-reader
     binary: "{{ .ProjectName }}"
     goos:
@@ -39,18 +39,15 @@ builds:
 
 archives:
   # https://goreleaser.com/customization/archive/
-  - format: zip
-    builds:
-    - build
+  - formats: 
+    - zip
+    ids:
+    - yaml-reader
     files:
       - LICENSE
       - README.md
     name_template: >-
-      {{ .ProjectName }}_
-      {{- title .Os }}_
-      {{- if eq .Arch "amd64" }}x86_64
-      {{- else if eq .Arch "386" }}i386
-      {{- else }}{{ .Arch }}{{ end }}
+      {{ .ProjectName }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}      
 
 checksum:
   # https://goreleaser.com/customization/checksum/
@@ -58,7 +55,7 @@ checksum:
 
 snapshot:
   # https://goreleaser.com/customization/snapshots/
-  name_template: "{{ incpatch .Version }}-{{ .ShortCommit }}{{ if .IsGitDirty }}-dirty{{ end }}"
+  version_template: "{{ incpatch .Version }}-{{ .ShortCommit }}{{ if .IsGitDirty }}-dirty{{ end }}"
 
 source:
   # https://goreleaser.com/customization/source/
@@ -166,3 +163,19 @@ docker_manifests:
     image_templates: [*amd64-image, *arm64-image]
   - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
     image_templates: [*amd64-image, *arm64-image]
+
+sboms:
+  # https://goreleaser.com/customization/sbom/
+  - id: default
+    documents:
+      - "${artifact}-{{.Os}}-{{.Arch}}.spdx.sbom.json"
+    cmd: syft
+    args:
+      - "$artifact"
+      - "--output" 
+      - "spdx-json=$document"
+    env:
+      - SYFT_FILE_METADATA_CATALOGER_ENABLED=true 
+    artifacts: binary
+    ids:
+      - yaml-reader

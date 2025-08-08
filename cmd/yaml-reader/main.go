@@ -13,7 +13,8 @@ import (
 )
 
 const (
-	resultRoot = "data"
+	resultRoot               = "data"
+	fileMode0600 os.FileMode = 0o600
 )
 
 type parameters struct {
@@ -107,10 +108,12 @@ func outputVariables(w *os.File, data map[string]interface{}) error {
 		if !ok {
 			continue
 		}
+
 		if err := write(w, k, s); err != nil {
 			return err
 		}
 	}
+
 	return nil
 }
 
@@ -129,7 +132,7 @@ func openGitHubOutput() (*os.File, error) {
 		return nil, os.ErrNotExist
 	}
 
-	return os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644)
+	return os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, fileMode0600)
 }
 
 func fileExist(filename string) bool {

@@ -1,6 +1,6 @@
 version: 2
 
-project_name: topaz
+project_name: yaml-reader
 
 env:
   # https://goreleaser.com/customization/env/

@@ -1,4 +1,6 @@
-project_name: yaml-reader
+version: 2
+
+project_name: topaz
 
 env:
   # https://goreleaser.com/customization/env/
@@ -90,7 +92,7 @@ brews:
     repository:
       owner: "{{ .Env.ORG }}"
       name: homebrew-tap
-      token: "{{ .Env.HOMEBREW_TAP }}"
+      token: "{{ .Env.GITHUB_TOKEN }}"
 
     url_template: "https://github.com/gertd/yaml-reader/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
 

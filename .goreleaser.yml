@@ -87,7 +87,7 @@ blobs:
 brews:
   # https://goreleaser.com/customization/homebrew/
   -
-    name: yaml-reader-homebrew
+    name: yaml-reader
 
     repository:
       owner: "{{ .Env.ORG }}"

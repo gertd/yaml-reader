@@ -86,7 +86,7 @@ release:
 
   name_template: "{{.ProjectName}} {{.Tag}}"
 
-# blobs:
+blobs:
   # https://goreleaser.com/customization/blob/
 
 # brews:
@@ -173,9 +173,9 @@ docker_manifests:
 
 sboms:
   # https://goreleaser.com/customization/sbom/
-  - id: default
+  - id: yaml-reader
     documents:
-      - "${artifact}-{{.Os}}-{{.Arch}}.spdx.sbom.json"
+      - "${{.ProjectName}}-{{.Os}}-{{.Arch}}.spdx.sbom.json"
     cmd: syft
     args:
       - "$artifact"

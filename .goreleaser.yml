@@ -84,36 +84,36 @@ release:
 blobs:
   # https://goreleaser.com/customization/blob/
 
-brews:
-  # https://goreleaser.com/customization/homebrew/
-  -
-    name: yaml-reader
+# brews:
+#   # https://goreleaser.com/customization/homebrew/
+#   -
+#     name: yaml-reader
 
-    repository:
-      owner: "{{ .Env.ORG }}"
-      name: homebrew-tap
-      token: "{{ .Env.GITHUB_TOKEN }}"
+#     repository:
+#       owner: "{{ .Env.ORG }}"
+#       name: homebrew-tap
+#       token: "{{ .Env.GITHUB_TOKEN }}"
 
-    url_template: "https://github.com/gertd/yaml-reader/releases/download/{{ .Tag }}/{{ .ProjectName }}"
+#     url_template: "https://github.com/gertd/yaml-reader/releases/download/{{ .Tag }}/{{ .ProjectName }}"
 
-    download_strategy: CurlDownloadStrategy
+#     download_strategy: CurlDownloadStrategy
 
-    commit_author:
-      name: Gert Drapers
-      email: gert@d5s.io
+#     commit_author:
+#       name: Gert Drapers
+#       email: gert@d5s.io
 
-    homepage: "https://github.com/gertd/yaml-reader"
+#     homepage: "https://github.com/gertd/yaml-reader"
 
-    description: "yaml file reader"
+#     description: "yaml file reader"
 
-    license: "MIT"
+#     license: "MIT"
 
-    skip_upload: false
+#     skip_upload: false
 
-    test: |
-      system "#{bin}/yaml-reader version"
-    install: |
-      bin.install "yaml-reader"
+#     test: |
+#       system "#{bin}/yaml-reader version"
+#     install: |
+#       bin.install "yaml-reader"
 
 dockers:
   # https://goreleaser.com/customization/docker/
@@ -166,18 +166,18 @@ docker_manifests:
   - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
     image_templates: [*amd64-image, *arm64-image]
 
-sboms:
-  # https://goreleaser.com/customization/sbom/
-  - id: default
-    documents:
-      - "${artifact}-{{.Os}}-{{.Arch}}.spdx.sbom.json"
-    cmd: syft
-    args:
-      - "$artifact"
-      - "--output" 
-      - "spdx-json=$document"
-    env:
-      - SYFT_FILE_METADATA_CATALOGER_ENABLED=true 
-    artifacts: binary
-    ids:
-      - yaml-reader
+# sboms:
+#   # https://goreleaser.com/customization/sbom/
+#   - id: default
+#     documents:
+#       - "${artifact}-{{.Os}}-{{.Arch}}.spdx.sbom.json"
+#     cmd: syft
+#     args:
+#       - "$artifact"
+#       - "--output" 
+#       - "spdx-json=$document"
+#     env:
+#       - SYFT_FILE_METADATA_CATALOGER_ENABLED=true 
+#     artifacts: binary
+#     ids:
+#       - yaml-reader

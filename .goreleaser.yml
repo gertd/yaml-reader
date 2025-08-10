@@ -171,18 +171,18 @@ docker_manifests:
   - name_template: "{{ .Env.REGISTRY }}/{{ .Env.ORG }}/{{ .Env.REPO }}:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
     image_templates: [*amd64-image, *arm64-image]
 
-# sboms:
-#   # https://goreleaser.com/customization/sbom/
-#   - id: default
-#     documents:
-#       - "${artifact}-{{.Os}}-{{.Arch}}.spdx.sbom.json"
-#     cmd: syft
-#     args:
-#       - "$artifact"
-#       - "--output" 
-#       - "spdx-json=$document"
-#     env:
-#       - SYFT_FILE_METADATA_CATALOGER_ENABLED=true 
-#     artifacts: binary
-#     ids:
-#       - yaml-reader
+sboms:
+  # https://goreleaser.com/customization/sbom/
+  - id: default
+    documents:
+      - "${artifact}-{{.Os}}-{{.Arch}}.spdx.sbom.json"
+    cmd: syft
+    args:
+      - "$artifact"
+      - "--output" 
+      - "spdx-json=$document"
+    env:
+      - SYFT_FILE_METADATA_CATALOGER_ENABLED=true 
+    artifacts: binary
+    ids:
+      - yaml-reader

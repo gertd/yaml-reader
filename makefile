@@ -8,7 +8,6 @@ ATTN_COLOR         := \033[33;01m
 
 GOOS               := $(shell go env GOOS)
 GOARCH             := $(shell go env GOARCH)
-GOPRIVATE          := "github.com/aserto-dev"
 DOCKER_BUILDKIT    := 1
 
 EXT_DIR            := ${PWD}/.ext
@@ -19,7 +18,7 @@ GO_VER             := 1.24
 VAULT_VER	         := 1.8.12
 SVU_VER 	         := 3.1.0
 GOTESTSUM_VER      := 1.12.1
-GOLANGCI-LINT_VER  := 2.0.2
+GOLANGCI-LINT_VER  := 2.3.1
 GORELEASER_VER     := 2.8.2
 SYFT_VER           := 1.13.0
 

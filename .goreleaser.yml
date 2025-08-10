@@ -47,7 +47,7 @@ archives:
       - LICENSE
       - README.md
     name_template: >-
-      {{ .ProjectName }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}      
+      {{ .ProjectName }}_{{ .Os }}_{{- if eq .Arch "amd64" }}x86_64{{- else }}{{ .Arch }}{{ end }}
 
 checksum:
   # https://goreleaser.com/customization/checksum/
@@ -90,7 +90,7 @@ brews:
     repository:
       owner: "{{ .Env.ORG }}"
       name: homebrew-tap
-      token: "{{ .Env.ASERTO_TAP }}"
+      token: "{{ .Env.HOMEBREW_TAP }}"
 
     url_template: "https://github.com/gertd/yaml-reader/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
 

@@ -21,6 +21,7 @@ linters:
     - gochecknoglobals  # no configuration options
     - nilnil
     - nlreturn          # redundant with wsl
+    - noinlineerr
     - paralleltest
     - revive
     - tagalign
@@ -65,8 +66,16 @@ linters:
           json: snake
           yaml: snake
 
+    wsl_v5:
+      allow-first-in-block: true
+      allow-whole-block: false
+      branch-max-lines: 2 
+
 formatters:
   enable:
     - gofmt
     - gofumpt
     - goimports
+
+run:
+  go: '1.24'

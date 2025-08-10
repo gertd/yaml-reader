@@ -32,6 +32,11 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
       -
+        name: Setup syft
+        uses: anchore/sbom-action/download-syft@v0
+        with:
+          syft-version: ${{ env.SYFT_VERSION }}
+      -
         name: Build
         uses: goreleaser/goreleaser-action@v6
         env:
@@ -77,6 +82,11 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
       -
+        name: Setup syft
+        uses: anchore/sbom-action/download-syft@v0
+        with:
+          syft-version: ${{ env.SYFT_VERSION }}
+      -
         name: Setup QEMU
         uses: docker/setup-qemu-action@v3
       - 
@@ -118,6 +128,11 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
+      -
+        name: Setup syft
+        uses: anchore/sbom-action/download-syft@v0
+        with:
+          syft-version: ${{ env.SYFT_VERSION }}
       -
         name: Setup QEMU
         uses: docker/setup-qemu-action@v3

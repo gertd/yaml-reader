@@ -94,7 +94,7 @@ brews:
       name: homebrew-tap
       token: "{{ .Env.GITHUB_TOKEN }}"
 
-    url_template: "https://github.com/gertd/yaml-reader/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+    url_template: "https://github.com/gertd/yaml-reader/releases/download/{{ .Tag }}/{{ .ProjectName }}"
 
     download_strategy: CurlDownloadStrategy
 

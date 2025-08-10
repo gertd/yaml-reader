@@ -19,7 +19,7 @@ VAULT_VER	         := 1.8.12
 SVU_VER 	         := 3.1.0
 GOTESTSUM_VER      := 1.12.1
 GOLANGCI-LINT_VER  := 2.3.1
-GORELEASER_VER     := 2.8.2
+GORELEASER_VER     := 2.11.2
 SYFT_VER           := 1.13.0
 
 RELEASE_TAG        := $$(${EXT_BIN_DIR}/svu current)

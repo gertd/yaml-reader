@@ -76,12 +76,17 @@ release:
   github:
     owner: "{{ .Env.ORG }}"
     name: "{{ .Env.REPO }}"
+  
+  ids:
+    - yaml-reader
 
   draft: false
   prerelease: "false"
+  replace_existing_artifacts: true
+
   name_template: "{{.ProjectName}} {{.Tag}}"
 
-blobs:
+# blobs:
   # https://goreleaser.com/customization/blob/
 
 # brews:

@@ -175,7 +175,7 @@ sboms:
   # https://goreleaser.com/customization/sbom/
   - id: yaml-reader
     documents:
-      - "${{.ProjectName}}-{{.Os}}-{{.Arch}}.spdx.sbom.json"
+      - "{{ .Binary }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}.sbom.json"
     cmd: syft
     args:
       - "$artifact"

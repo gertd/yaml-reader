@@ -14,11 +14,10 @@ EXT_DIR            := ${PWD}/.ext
 EXT_BIN_DIR        := ${EXT_DIR}/bin
 EXT_TMP_DIR        := ${EXT_DIR}/tmp
 
-GO_VER             := 1.24
-VAULT_VER	         := 1.8.12
+GO_VER             := 1.25
 SVU_VER 	         := 3.1.0
-GOTESTSUM_VER      := 1.12.1
-GOLANGCI-LINT_VER  := 2.3.1
+GOTESTSUM_VER      := 1.12.3
+GOLANGCI-LINT_VER  := 2.4.0
 GORELEASER_VER     := 2.11.2
 SYFT_VER           := 1.13.0
 

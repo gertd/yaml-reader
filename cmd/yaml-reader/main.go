@@ -75,13 +75,13 @@ func exec(p *parameters) error {
 	return outputVariables(writer, data)
 }
 
-func readFile(filename string) (map[string]interface{}, error) {
+func readFile(filename string) (map[string]any, error) {
 	buf, err := os.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
 
-	data := make(map[string]interface{})
+	data := make(map[string]any)
 
 	if err := yaml.Unmarshal(buf, &data); err != nil {
 		return nil, err
@@ -90,7 +90,7 @@ func readFile(filename string) (map[string]interface{}, error) {
 	return data, nil
 }
 
-func outputJSON(w *os.File, data map[string]interface{}) error {
+func outputJSON(w *os.File, data map[string]any) error {
 	buf := new(bytes.Buffer)
 	enc := json.NewEncoder(buf)
 	enc.SetIndent("", "")
@@ -102,7 +102,7 @@ func outputJSON(w *os.File, data map[string]interface{}) error {
 	return write(w, resultRoot, buf.String())
 }
 
-func outputVariables(w *os.File, data map[string]interface{}) error {
+func outputVariables(w *os.File, data map[string]any) error {
 	for k, v := range data {
 		s, ok := v.(string)
 		if !ok {

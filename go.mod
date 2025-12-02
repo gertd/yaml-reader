@@ -2,7 +2,7 @@ module github.com/gertd/yaml-reader
 
 go 1.25
 
-toolchain go1.25.1
+toolchain go1.25.4
 
 require (
 	github.com/pkg/errors v0.9.1

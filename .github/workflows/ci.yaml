@@ -14,7 +14,7 @@ on:
 env:
   PRE_RELEASE: ${{ github.ref == 'refs/heads/main' && 'development' || '' }}
   GO_VERSION: "1.25"
-  GO_RELEASER_VERSION: "v2.11.2"
+  GO_RELEASER_VERSION: "v2.9.0"
   GO_LANGCI_LINT_VERSION: "v2.6.2"
   GO_TESTSUM_VERSION: "1.13.0"
   SYFT_VERSION: "v1.13.0"

@@ -89,7 +89,7 @@ release:
 blobs:
   # https://goreleaser.com/customization/blob/
 
-# brews:
+brews:
   # https://goreleaser.com/customization/homebrew/
   -
     name: yaml-reader

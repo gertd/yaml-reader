@@ -13,11 +13,10 @@ on:
 
 env:
   PRE_RELEASE: ${{ github.ref == 'refs/heads/main' && 'development' || '' }}
-  GO_VERSION: "1.2"
-  GO_RELEASER_VERSION: "v2.18.2"
-  GO_LANGCI_LINT_VERSION: "v2.6.2"
-  GO_TESTSUM_VERSION: "1.13.0"
-  SYFT_VERSION: "v1.13.0"
+  GOLANGCI-LINT_VER: "2.14.0"
+  GORELEASER_VER: "2.18.2"
+  SYFT_VER: "1.13.0"
+
 
 jobs:
   test:
@@ -39,7 +38,7 @@ jobs:
         name: Setup syft
         uses: anchore/sbom-action/download-syft@v0
         with:
-          syft-version: ${{ env.SYFT_VERSION }}
+          syft-version: v${{ env.SYFT_VER }}
       -
         name: Test Setup
         run: |
@@ -51,13 +50,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           distribution: goreleaser
-          version: ${{ env.GO_RELEASER_VERSION }}
+          version: v${{ env.GORELEASER_VER }}
           args: build --clean --snapshot --single-target
       -
         name: Lint
         uses: golangci/golangci-lint-action@v9
         with:
-          version: ${{ env.GO_LANGCI_LINT_VERSION }}
+          version: v${{ env.GOLANGCI-LINT_VER }}
           args: --timeout=30m
       -
         name: Test
@@ -97,7 +96,7 @@ jobs:
         name: Setup syft
         uses: anchore/sbom-action/download-syft@v0
         with:
-          syft-version: ${{ env.SYFT_VERSION }}
+          syft-version: v${{ env.SYFT_VER }}
       -
         name: Setup QEMU
         uses: docker/setup-qemu-action@v4
@@ -115,7 +114,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           distribution: goreleaser
-          version: ${{ env.GO_RELEASER_VERSION }}
+          version: v${{ env.GORELEASER_VER }}
           args: release --clean --snapshot
 
   release:
@@ -146,7 +145,7 @@ jobs:
         name: Setup syft
         uses: anchore/sbom-action/download-syft@v0
         with:
-          syft-version: ${{ env.SYFT_VERSION }}
+          syft-version: v${{ env.SYFT_VER }}
       -
         name: Setup QEMU
         uses: docker/setup-qemu-action@v4
@@ -166,5 +165,5 @@ jobs:
           HOMEBREW_TAP: ${{ secrets.GITHUB_TOKEN }}
         with:
           distribution: goreleaser
-          version: ${{ env.GO_RELEASER_VERSION }}
+          version: v${{ env.GORELEASER_VER }}
           args: release --clean

@@ -1,0 +1,22 @@
+FROM alpine
+
+ARG TARGETPLATFORM
+ARG TARGETOS
+ARG TARGETARCH
+ARG BUILDPLATFORM
+
+RUN echo "BUILDPLATFORM=$BUILDPLATFORM" \
+ && echo "TARGETPLATFORM=$TARGETPLATFORM" \
+ && echo "TARGETOS=$TARGETOS" \
+ && echo "TARGETARCH=$TARGETARCH"
+
+RUN apk add --no-cache
+
+WORKDIR /app
+
+COPY \
+${TARGETPLATFORM}/yaml-reader* \
+gh-action-entrypoint.sh \
+/app/
+
+ENTRYPOINT ["./yaml-reader"]

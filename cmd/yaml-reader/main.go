@@ -5,11 +5,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/pkg/errors"
 	flag "github.com/spf13/pflag"
-	"gopkg.in/yaml.v3"
+	"go.yaml.in/yaml/v3"
 )
 
 const (
@@ -23,13 +24,22 @@ type parameters struct {
 }
 
 func main() {
-	p := parameters{}
+	p := parameters{
+		filename:   "",
+		jsonOutput: false,
+	}
 
 	flag.StringVar(&p.filename, "file", "", "filepath to yaml input file")
 	flag.BoolVar(&p.jsonOutput, "json", false, "output as JSON variable")
 	flag.Parse()
 
-	if ok, err := p.validate(); !ok {
+	cwd, err := os.Getwd()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+		return
+	}
+
+	if ok, err := p.validate(cwd); !ok {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		return
 	}
@@ -40,10 +50,17 @@ func main() {
 	}
 }
 
-func (p *parameters) validate() (bool, error) {
+func (p *parameters) validate(base string) (bool, error) {
 	if p.filename == "" {
 		return false, errors.Errorf("--file not specified")
 	}
+
+	filename, err := safeJoin(base, p.filename)
+	if err != nil {
+		return false, err
+	}
+
+	p.filename = filename
 
 	if !fileExist(p.filename) {
 		return false, errors.Errorf("--file [%s] does not exist", p.filename)
@@ -127,8 +144,22 @@ func openGitHubOutput() (*os.File, error) {
 		return os.Stdout, nil
 	}
 
-	filename := os.Getenv("GITHUB_OUTPUT")
-	if filename == "" {
+	githubOutput := os.Getenv("GITHUB_OUTPUT")
+	if githubOutput == "" {
+		return nil, os.ErrInvalid
+	}
+
+	cwd, err := os.Getwd()
+	if err != nil {
+		return nil, err
+	}
+
+	filename, err := safeJoin(cwd, githubOutput)
+	if err != nil {
+		return nil, err
+	}
+
+	if fi, err := os.Stat(filename); err != nil || fi.IsDir() {
 		return nil, os.ErrNotExist
 	}
 
@@ -136,10 +167,21 @@ func openGitHubOutput() (*os.File, error) {
 }
 
 func fileExist(filename string) bool {
-	info, err := os.Stat(filename)
+	info, err := os.Stat(filepath.Clean(filename))
 	if os.IsNotExist(err) {
 		return false
 	}
 
 	return !info.IsDir()
+}
+
+func safeJoin(base, input string) (string, error) {
+	clean := filepath.Clean(input)
+	full := filepath.Join(base, clean)
+
+	if !strings.HasPrefix(full, filepath.Clean(base)+string(os.PathSeparator)) {
+		return "", os.ErrInvalid
+	}
+
+	return full, nil
 }

@@ -12,7 +12,8 @@ linters:
   disable:
     - depguard
     - exhaustruct
-    - nlreturn          # redundant with wsl
+    - gomodguard # deprecated, replaced by gomodguard_v2
+    - nlreturn
     - noinlineerr
     - revive
     - varnamelen
@@ -35,6 +36,16 @@ linters:
       statements: 60
       ignore-comments: true
 
+    gocritic:
+      enable-all: false
+      disable-all: true
+      enabled-checks:
+        - commentedOutCode
+
+    gomoddirectives:
+      replace-allow-list:
+        - github.com/slok/go-http-metrics
+
     gosec:
       excludes:
         - G104  # Errors unhandled
@@ -46,22 +57,27 @@ linters:
         - empty
         - stdlib
         - generic
-        - proto.Message
 
-        
     lll:
       line-length: 150
+
+    recvcheck:
+      exclusions:
+        - "*.Map"
 
     tagliatelle:
       case:
         rules:
           json: snake
           yaml: snake
-              
+
     wsl_v5:
       allow-first-in-block: true
       allow-whole-block: false
       branch-max-lines: 2 
+
+  exclusions:
+    generated: lax
 
 formatters:
   enable:

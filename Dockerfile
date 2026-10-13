@@ -10,7 +10,7 @@ RUN echo "BUILDPLATFORM=$BUILDPLATFORM" \
  && echo "TARGETOS=$TARGETOS" \
  && echo "TARGETARCH=$TARGETARCH"
 
-RUN apk add --no-cache
+RUN apk add --no-cache bash
 
 WORKDIR /app
 

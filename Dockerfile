@@ -10,9 +10,10 @@ RUN echo "BUILDPLATFORM=$BUILDPLATFORM" \
  && echo "TARGETOS=$TARGETOS" \
  && echo "TARGETARCH=$TARGETARCH"
 
-RUN apk add --no-cache bash
+RUN apk add --no-cache
 
-WORKDIR /app
+# See https://docs.github.com/en/actions/reference/workflows-and-actions/dockerfile-support#workdir
+# WORKDIR /app
 
 COPY \
 ${TARGETPLATFORM}/yaml-reader* \

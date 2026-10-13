@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 
 set -e
 
@@ -14,7 +14,7 @@ fi
 #
 e_code=0
 
-# construct commandline arguments 
+# construct commandline arguments
 CMD="/app/yaml-reader --file ${INPUT_FILE}"
 
 if [[ "$INPUT_JSON" == "true" ]]; then

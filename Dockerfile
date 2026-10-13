@@ -15,7 +15,7 @@ RUN apk add --no-cache bash
 # See https://docs.github.com/en/actions/reference/workflows-and-actions/dockerfile-support#workdir
 # WORKDIR /app
 
-COPY \
+COPY --chmod=755 \
 ${TARGETPLATFORM}/yaml-reader* \
 gh-action-entrypoint.sh \
 /app/

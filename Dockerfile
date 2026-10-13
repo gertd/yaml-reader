@@ -10,7 +10,7 @@ RUN echo "BUILDPLATFORM=$BUILDPLATFORM" \
  && echo "TARGETOS=$TARGETOS" \
  && echo "TARGETARCH=$TARGETARCH"
 
-RUN apk add --no-cache
+RUN apk add --no-cache bash
 
 # See https://docs.github.com/en/actions/reference/workflows-and-actions/dockerfile-support#workdir
 # WORKDIR /app
@@ -20,4 +20,4 @@ ${TARGETPLATFORM}/yaml-reader* \
 gh-action-entrypoint.sh \
 /app/
 
-ENTRYPOINT ["./yaml-reader"]
+ENTRYPOINT ["/app/yaml-reader"]

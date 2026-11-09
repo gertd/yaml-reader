@@ -15,8 +15,8 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   HOMEBREW_TAP: ${{ secrets.HOMEBREW_TAP_TOKEN }}
   PRE_RELEASE: ${{ github.ref == 'refs/heads/main' && 'development' || '' }}
-  GOLANGCI-LINT_VER: "2.14.0"
-  GORELEASER_VER: "2.18.2"
+  GOLANGCI-LINT_VER: "2.15.0"
+  GORELEASER_VER: "2.20.0"
   SYFT_VER: "1.13.0"
 
 

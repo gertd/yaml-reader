@@ -15,10 +15,10 @@ EXT_BIN_DIR        := ${EXT_DIR}/bin
 EXT_TMP_DIR        := ${EXT_DIR}/tmp
 
 GO_VER             := 1.27
-SVU_VER            := 3.4.1
+SVU_VER            := 3.4.4
 GOTESTSUM_VER      := 1.13.0
-GOLANGCI-LINT_VER  := 2.14.0
-GORELEASER_VER     := 2.18.2
+GOLANGCI-LINT_VER  := 2.15.0
+GORELEASER_VER     := 2.20.0
 SYFT_VER           := 1.13.0
 
 RELEASE_TAG        := $$(${EXT_BIN_DIR}/svu current)
@@ -47,7 +47,7 @@ release:
 .PHONY: snapshot
 snapshot:
 	@echo -e "$(ATTN_COLOR)==> $@ $(NO_COLOR)"
-	@${EXT_BIN_DIR}/goreleaser release --clean --snapshot
+	@${EXT_BIN_DIR}/goreleaser release --clean --snapshot --skip publish
 
 .PHONY: lint
 lint: gover
